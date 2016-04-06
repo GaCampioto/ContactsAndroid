@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Agenda</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_formulario">Formulário</string>
+    <string name="activity_formulario_nome">Nome</string>
+    <string name="activity_formulario_endereco">Endereço</string>
+    <string name="activity_formulario_telefone">Telefone</string>
+    <string name="activity_formulario_site">Site</string>
+    <string name="activity_formulario_btn_salvar">Salvar</string>
+    <string name="btn_clicado">Botão clicado</string>
+
+</resources>

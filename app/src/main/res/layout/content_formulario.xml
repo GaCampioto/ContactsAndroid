@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context="br.com.gcampioto.agenda.FormularioActivity"
+        tools:showIn="@layout/activity_formulario"
+        android:orientation="vertical">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+                <EditText
+                    android:id="@+id/formulario_nome"
+                    android:hint="@string/activity_formulario_nome"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/formulario_endereco"
+                    android:hint="@string/activity_formulario_endereco"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/formulario_telefone"
+                    android:hint="@string/activity_formulario_telefone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/formulario_site"
+                    android:hint="@string/activity_formulario_site"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <RatingBar
+                    android:id="@+id/formulario_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:layout_gravity="center"/>
+                <Button
+                    android:id="@+id/formulario_salvar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_formulario_btn_salvar"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
