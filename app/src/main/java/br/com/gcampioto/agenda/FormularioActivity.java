@@ -15,7 +15,12 @@ import android.widget.Toast;
 
 import java.util.zip.Inflater;
 
+import br.com.gcampioto.AlunoDAO;
+import br.com.gcampioto.helper.FormularioHelper;
+import br.com.gcampioto.model.Aluno;
+
 public class FormularioActivity extends AppCompatActivity {
+    FormularioHelper formularioHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +32,7 @@ public class FormularioActivity extends AppCompatActivity {
         // Sets the Toolbar to act as the ActionBar for this Activity window.
         // Make sure the toolbar exists in the activity and is not null
         setSupportActionBar(toolbar);
+        formularioHelper = new FormularioHelper(this);
     }
 
     @Override
@@ -41,7 +47,19 @@ public class FormularioActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_confirmar:
-                Toast.makeText(FormularioActivity.this, R.string.btn_clicado, Toast.LENGTH_SHORT).show();
+                Aluno aluno = formularioHelper.getAlunoFromFormulario();
+                AlunoDAO alunoDAO = new AlunoDAO(this);
+                try {
+                    alunoDAO.insert(aluno);
+                    Toast.makeText(FormularioActivity.this, aluno.getNome(), Toast.LENGTH_SHORT)
+                            .show();
+                } catch (Exception e){
+                    Toast.makeText(FormularioActivity.this, "Erro ao adicionar aluno: " + aluno.getNome(), Toast.LENGTH_SHORT)
+                            .show();
+                    Log.e("ERRO: ", Log.getStackTraceString(e));
+                } finally {
+                    alunoDAO.close();
+                }
                 finish();
                 break;
         }

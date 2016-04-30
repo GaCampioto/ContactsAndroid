@@ -6,12 +6,19 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import java.util.List;
+
+import br.com.gcampioto.AlunoDAO;
+import br.com.gcampioto.model.Aluno;
 
 public class ListaAlunosActivity extends AppCompatActivity {
 
@@ -19,10 +26,6 @@ public class ListaAlunosActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_alunos);
-        String [] arrayAlunos = {"Aluno 1", "Aluno 2", "Aluno 3"};
-        ListView listViewAlunos = (ListView) findViewById(R.id.lista_alunos);
-        ArrayAdapter<String> adapterString = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayAlunos);
-        listViewAlunos.setAdapter(adapterString);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -41,10 +44,31 @@ public class ListaAlunosActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        populateListAlunos();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_lista_alunos, menu);
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private void populateListAlunos() {
+        AlunoDAO alunoDAO = new AlunoDAO(this);
+        try {
+            List<Aluno> alunos = alunoDAO.getAllAlunos();
+            ListView listViewAlunos = (ListView) findViewById(R.id.lista_alunos);
+            ArrayAdapter<Aluno> adapterString = new ArrayAdapter<Aluno>(this, android.R.layout.simple_list_item_1, alunos);
+            listViewAlunos.setAdapter(adapterString);
+        } catch (Exception e){
+            Toast.makeText(ListaAlunosActivity.this, "Erro ao recupera os alunos", Toast.LENGTH_SHORT).show();
+            Log.e("ERRO: ", Log.getStackTraceString(e));
+        } finally {
+            alunoDAO.close();
+        }
     }
 }
