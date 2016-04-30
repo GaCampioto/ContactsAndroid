@@ -8,5 +8,7 @@
     <string name="activity_formulario_site">Site</string>
     <string name="activity_formulario_btn_salvar">Salvar</string>
     <string name="btn_clicado">Botão clicado</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="menu_confirmar_title">Confirmar</string>
 
 </resources>

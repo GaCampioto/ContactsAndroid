@@ -45,11 +45,7 @@
                     android:layout_height="wrap_content"
                     android:numStars="5"
                     android:layout_gravity="center"/>
-                <Button
-                    android:id="@+id/formulario_salvar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/activity_formulario_btn_salvar"/>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
