@@ -1,8 +1,11 @@
 package br.com.gcampioto.model;
+
+import java.io.Serializable;
+
 /**
  * Created by Gabris on 30/04/2016.
  */
-public class Aluno {
+public class Aluno implements Serializable{
     private Long    Id;
     private String  nome;
     private String  endereco;

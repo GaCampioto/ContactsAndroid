@@ -20,7 +20,8 @@ import br.com.gcampioto.helper.FormularioHelper;
 import br.com.gcampioto.model.Aluno;
 
 public class FormularioActivity extends AppCompatActivity {
-    FormularioHelper formularioHelper;
+    private FormularioHelper formularioHelper;
+    private Aluno alunoExtra;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,19 @@ public class FormularioActivity extends AppCompatActivity {
         // Make sure the toolbar exists in the activity and is not null
         setSupportActionBar(toolbar);
         formularioHelper = new FormularioHelper(this);
+        alunoExtra = (Aluno) getIntent().getSerializableExtra("aluno");
+        if(alunoExtra != null){
+            fillField(alunoExtra);
+        }
+    }
+
+    private void fillField(Aluno alunoExtra) {
+        formularioHelper.setId(alunoExtra.getId());
+        formularioHelper.setNome(alunoExtra.getNome());
+        formularioHelper.setEndereco(alunoExtra.getEndereco());
+        formularioHelper.setTelefone(alunoExtra.getTelefone());
+        formularioHelper.setSite(alunoExtra.getSite());
+        formularioHelper.setNota(alunoExtra.getNota());
     }
 
     @Override
@@ -50,11 +64,15 @@ public class FormularioActivity extends AppCompatActivity {
                 Aluno aluno = formularioHelper.getAlunoFromFormulario();
                 AlunoDAO alunoDAO = new AlunoDAO(this);
                 try {
-                    alunoDAO.insert(aluno);
-                    Toast.makeText(FormularioActivity.this, aluno.getNome(), Toast.LENGTH_SHORT)
+                    if (aluno.getId() != null) {
+                        alunoDAO.updateAluno(aluno);
+                    } else {
+                        alunoDAO.insert(aluno);
+                    }
+                    Toast.makeText(FormularioActivity.this, "Aluno salvo com sucesso!", Toast.LENGTH_SHORT)
                             .show();
                 } catch (Exception e){
-                    Toast.makeText(FormularioActivity.this, "Erro ao adicionar aluno: " + aluno.getNome(), Toast.LENGTH_SHORT)
+                    Toast.makeText(FormularioActivity.this, "Erro ao guardar aluno: " + aluno.getNome(), Toast.LENGTH_SHORT)
                             .show();
                     Log.e("ERRO: ", Log.getStackTraceString(e));
                 } finally {

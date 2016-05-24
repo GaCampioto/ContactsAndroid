@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,12 +47,7 @@ public class AlunoDAO extends SQLiteOpenHelper {
 
     public void insert(Aluno aluno) {
         SQLiteDatabase db = getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("nome", aluno.getNome());
-        values.put("endereco", aluno.getEndereco());
-        values.put("telefone", aluno.getTelefone());
-        values.put("site", aluno.getSite());
-        values.put("nota", aluno.getNota());
+        ContentValues values = getContentValues(aluno);
         db.insert(TABLE_ALUNOS, null, values);
     }
 
@@ -72,5 +68,29 @@ public class AlunoDAO extends SQLiteOpenHelper {
         }
         c.close();
         return allAlunos;
+    }
+
+    public void delete(Aluno aluno) {
+        SQLiteDatabase db = getWritableDatabase();
+        String [] params = {aluno.getId().toString()};
+        db.delete(TABLE_ALUNOS, "id = ?", params);
+    }
+
+    public void updateAluno(Aluno aluno) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = getContentValues(aluno);
+        String [] params = {aluno.getId().toString()};
+        db.update(TABLE_ALUNOS, values, "id = ?", params);
+    }
+
+    @NonNull
+    private ContentValues getContentValues(Aluno aluno) {
+        ContentValues values = new ContentValues();
+        values.put("nome", aluno.getNome());
+        values.put("endereco", aluno.getEndereco());
+        values.put("telefone", aluno.getTelefone());
+        values.put("site", aluno.getSite());
+        values.put("nota", aluno.getNota());
+        return values;
     }
 }
