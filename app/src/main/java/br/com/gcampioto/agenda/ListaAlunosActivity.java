@@ -1,9 +1,15 @@
 package br.com.gcampioto.agenda;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Browser;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -78,7 +85,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
             List<Aluno> alunos = alunoDAO.getAllAlunos();
             ArrayAdapter<Aluno> adapterString = new ArrayAdapter<Aluno>(this, android.R.layout.simple_list_item_1, alunos);
             listViewAlunos.setAdapter(adapterString);
-        } catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(ListaAlunosActivity.this, "Erro ao recupera os alunos", Toast.LENGTH_SHORT).show();
             Log.e("ERRO: ", Log.getStackTraceString(e));
         } finally {
@@ -88,9 +95,10 @@ public class ListaAlunosActivity extends AppCompatActivity {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        MenuItem menuItem = menu.add("Deletar");
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         final Aluno aluno = (Aluno) listViewAlunos.getItemAtPosition(info.position);
+
+        MenuItem menuItem = menu.add("Deletar");
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -108,5 +116,42 @@ public class ListaAlunosActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        MenuItem itemSMS = menu.add("Enviar SMS");
+        Intent sms = new Intent(Intent.ACTION_VIEW);
+        sms.setData(Uri.parse("sms:" + aluno.getTelefone()));
+        itemSMS.setIntent(sms);
+
+        MenuItem itemCall = menu.add("Ligar");
+        itemCall.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent call = new Intent(Intent.ACTION_CALL);
+                call.setData(Uri.parse("tel:" + aluno.getTelefone()));
+                if(ActivityCompat.checkSelfPermission(ListaAlunosActivity.this, Manifest.permission.CALL_PHONE)
+                        != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(ListaAlunosActivity.this, new String [] {Manifest.permission.CALL_PHONE}, 1);
+                } else {
+                    startActivity(call);
+                }
+                return false;
+            }
+        });
+
+        String site = aluno.getSite();
+        if (!site.startsWith("http://")) {
+            site = "http://" + aluno.getSite();
+        }
+
+        MenuItem itemSite = menu.add("Visitar site");
+        Intent intentSite = new Intent(Intent.ACTION_VIEW);
+        intentSite.setData(Uri.parse(site));
+        itemSite.setIntent(intentSite);
+
+
+        MenuItem itemMap = menu.add("Visualizar endereço");
+        Intent map = new Intent(Intent.ACTION_VIEW);
+        map.setData(Uri.parse("geo:0.0?q=" + aluno.getEndereco()));
+        itemMap.setIntent(map);
     }
 }
