@@ -16,6 +16,30 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="245dp">
+                        <ImageView
+                            android:id="@+id/formulario_foto"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:src="@drawable/person"
+                            android:background="#00A8EC" />
+
+                        <android.support.design.widget.FloatingActionButton
+                            android:id="@+id/formulario_btn_foto"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:layout_gravity="bottom|end"
+                            android:scaleType="center"
+                            android:layout_margin="@dimen/fab_margin"
+                            android:src="@drawable/ic_camera"
+                            android:tint="@color/white"
+                            app:backgroundTint="@color/floatingButtons"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentRight="true" />
+                </RelativeLayout>
+
                 <EditText
                     android:id="@+id/formulario_nome"
                     android:hint="@string/activity_formulario_nome"

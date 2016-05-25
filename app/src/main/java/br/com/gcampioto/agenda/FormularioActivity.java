@@ -1,8 +1,14 @@
 package br.com.gcampioto.agenda;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -13,6 +19,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+
+import java.io.File;
 import java.util.zip.Inflater;
 
 import br.com.gcampioto.AlunoDAO;
@@ -22,6 +33,11 @@ import br.com.gcampioto.model.Aluno;
 public class FormularioActivity extends AppCompatActivity {
     private FormularioHelper formularioHelper;
     private Aluno alunoExtra;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +51,27 @@ public class FormularioActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         formularioHelper = new FormularioHelper(this);
         alunoExtra = (Aluno) getIntent().getSerializableExtra("aluno");
-        if(alunoExtra != null){
+        if (alunoExtra != null) {
             fillField(alunoExtra);
         }
+
+        FloatingActionButton btnFoto = (FloatingActionButton) findViewById(R.id.formulario_btn_foto);
+        btnFoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ActivityCompat.checkSelfPermission(FormularioActivity.this, Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(FormularioActivity.this, new String [] {Manifest.permission.CAMERA}, 1);
+                } else {
+                    Intent intentCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    String pathFoto = getExternalFilesDir(null) + "/"+ System.currentTimeMillis() + ".jpg";//parametro representa sub pasta padrão
+                    File foto = new File(pathFoto);
+                    intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(foto));
+                    startActivity(intentCamera);
+                }
+
+            }
+        });
     }
 
     private void fillField(Aluno alunoExtra) {
@@ -59,7 +93,7 @@ public class FormularioActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_confirmar:
                 Aluno aluno = formularioHelper.getAlunoFromFormulario();
                 AlunoDAO alunoDAO = new AlunoDAO(this);
@@ -71,7 +105,7 @@ public class FormularioActivity extends AppCompatActivity {
                     }
                     Toast.makeText(FormularioActivity.this, "Aluno salvo com sucesso!", Toast.LENGTH_SHORT)
                             .show();
-                } catch (Exception e){
+                } catch (Exception e) {
                     Toast.makeText(FormularioActivity.this, "Erro ao guardar aluno: " + aluno.getNome(), Toast.LENGTH_SHORT)
                             .show();
                     Log.e("ERRO: ", Log.getStackTraceString(e));
