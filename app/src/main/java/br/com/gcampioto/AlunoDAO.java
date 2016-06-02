@@ -17,7 +17,7 @@ import br.com.gcampioto.model.Aluno;
  */
 public class AlunoDAO extends SQLiteOpenHelper {
     private static String DATABASE_NAME = "Alunos";
-    private static Integer DATABASE_VERSION = 1;
+    private static Integer DATABASE_VERSION = 2;
     private static String TABLE_ALUNOS = "alunos";
 
 
@@ -33,16 +33,20 @@ public class AlunoDAO extends SQLiteOpenHelper {
                 "endereco TEXT," +
                 "telefone TEXT," +
                 "site TEXT," +
-                " nota REAL);";
+                "nota REAL" +
+                "pathFoto TEXT);";
 
         db.execSQL(sql);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        String sql = "DROP TABLE IF EXISTS" + TABLE_ALUNOS;
-        db.execSQL(sql);
-        onCreate(db);
+        String sql = "";
+        switch (oldVersion){
+            case 1:
+                sql = "ALTER TABLE Alunos ADD COLUMN pathFoto TEXT";
+                db.execSQL(sql);
+        }
     }
 
     public void insert(Aluno aluno) {
@@ -64,6 +68,7 @@ public class AlunoDAO extends SQLiteOpenHelper {
             aluno.setTelefone(c.getString(c.getColumnIndex("telefone")));
             aluno.setSite(c.getString(c.getColumnIndex("site")));
             aluno.setNota(c.getDouble(c.getColumnIndex("nota")));
+            aluno.setPathFoto(c.getString(c.getColumnIndex("pathFoto")));
             allAlunos.add(aluno);
         }
         c.close();
@@ -91,6 +96,7 @@ public class AlunoDAO extends SQLiteOpenHelper {
         values.put("telefone", aluno.getTelefone());
         values.put("site", aluno.getSite());
         values.put("nota", aluno.getNota());
+        values.put("pathFoto", aluno.getPathFoto());
         return values;
     }
 }

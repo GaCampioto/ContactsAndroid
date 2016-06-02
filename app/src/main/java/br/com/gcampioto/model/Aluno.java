@@ -12,6 +12,7 @@ public class Aluno implements Serializable{
     private String  telefone;
     private String  site;
     private Double  nota;
+    private String  pathFoto;
 
     public Long getId() {
         return Id;
@@ -59,6 +60,14 @@ public class Aluno implements Serializable{
 
     public void setNota(Double nota) {
         this.nota = nota;
+    }
+
+    public String getPathFoto() {
+        return pathFoto;
+    }
+
+    public void setPathFoto(String pathFoto) {
+        this.pathFoto = pathFoto;
     }
 
     @Override

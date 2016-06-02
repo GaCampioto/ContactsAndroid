@@ -3,6 +3,8 @@ package br.com.gcampioto.agenda;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -17,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
@@ -31,6 +34,7 @@ import br.com.gcampioto.helper.FormularioHelper;
 import br.com.gcampioto.model.Aluno;
 
 public class FormularioActivity extends AppCompatActivity {
+    public static final int CAMERA_CODE = 1;
     private FormularioHelper formularioHelper;
     private Aluno alunoExtra;
     /**
@@ -38,6 +42,7 @@ public class FormularioActivity extends AppCompatActivity {
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+    private String pathFoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,17 +66,25 @@ public class FormularioActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(ActivityCompat.checkSelfPermission(FormularioActivity.this, Manifest.permission.CAMERA)
                         != PackageManager.PERMISSION_GRANTED){
-                    ActivityCompat.requestPermissions(FormularioActivity.this, new String [] {Manifest.permission.CAMERA}, 1);
+                    ActivityCompat.requestPermissions(FormularioActivity.this, new String [] {Manifest.permission.CAMERA}, CAMERA_CODE);
                 } else {
                     Intent intentCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    String pathFoto = getExternalFilesDir(null) + "/"+ System.currentTimeMillis() + ".jpg";//parametro representa sub pasta padrão
+                    pathFoto = getExternalFilesDir(null) + "/"+ System.currentTimeMillis() + ".jpg";//parametro representa sub pasta padrão
                     File foto = new File(pathFoto);
                     intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(foto));
-                    startActivity(intentCamera);
+                    startActivityForResult(intentCamera, CAMERA_CODE);
                 }
 
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == CAMERA_CODE && resultCode == RESULT_OK){
+            formularioHelper.loadImageView(pathFoto);
+        }
     }
 
     private void fillField(Aluno alunoExtra) {
@@ -81,6 +94,7 @@ public class FormularioActivity extends AppCompatActivity {
         formularioHelper.setTelefone(alunoExtra.getTelefone());
         formularioHelper.setSite(alunoExtra.getSite());
         formularioHelper.setNota(alunoExtra.getNota());
+        formularioHelper.loadImageView(alunoExtra.getPathFoto());
     }
 
     @Override

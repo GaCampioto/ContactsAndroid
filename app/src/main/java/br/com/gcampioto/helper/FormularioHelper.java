@@ -1,7 +1,11 @@
 package br.com.gcampioto.helper;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 
 import br.com.gcampioto.agenda.R;
@@ -18,6 +22,7 @@ public class FormularioHelper {
     private EditText telefone;
     private EditText site;
     private RatingBar nota;
+    private ImageView foto;
 
     public FormularioHelper (Activity formulario){
         this.formulario = formulario;
@@ -26,6 +31,7 @@ public class FormularioHelper {
         this.telefone = (EditText) formulario.findViewById(R.id.formulario_telefone);
         this.site = (EditText) formulario.findViewById(R.id.formulario_site);
         this.nota = (RatingBar) formulario.findViewById(R.id.formulario_rating);
+        this.foto = (ImageView) formulario.findViewById(R.id.formulario_foto);
     }
 
     public Aluno getAlunoFromFormulario(){
@@ -36,6 +42,7 @@ public class FormularioHelper {
         aluno.setTelefone(getTelefone());
         aluno.setSite(getSite());
         aluno.setNota(getNota());
+        aluno.setPathFoto(getPathFoto());
         return aluno;
     }
 
@@ -72,4 +79,17 @@ public class FormularioHelper {
     public Long getId() { return id; }
 
     public void setId(Long id) { this.id = id; }
+
+    public String getPathFoto() {return (String) this.foto.getTag();}
+
+
+    public void loadImageView(String pathFoto) {
+        if(pathFoto != null) {
+            Bitmap bitmap = BitmapFactory.decodeFile(pathFoto);
+            bitmap = Bitmap.createScaledBitmap(bitmap, 300, 300, true);
+            foto.setImageBitmap(bitmap);
+            foto.setScaleType(ImageView.ScaleType.FIT_XY);
+            foto.setTag(pathFoto);
+        }
+    }
 }

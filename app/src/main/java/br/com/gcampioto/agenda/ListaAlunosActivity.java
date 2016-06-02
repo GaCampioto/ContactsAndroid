@@ -86,7 +86,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
             ArrayAdapter<Aluno> adapterString = new ArrayAdapter<Aluno>(this, android.R.layout.simple_list_item_1, alunos);
             listViewAlunos.setAdapter(adapterString);
         } catch (Exception e) {
-            Toast.makeText(ListaAlunosActivity.this, "Erro ao recupera os alunos", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ListaAlunosActivity.this, "Erro ao recuperar os alunos", Toast.LENGTH_SHORT).show();
             Log.e("ERRO: ", Log.getStackTraceString(e));
         } finally {
             alunoDAO.close();
