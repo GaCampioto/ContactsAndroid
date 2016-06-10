@@ -28,6 +28,7 @@ import java.security.cert.CertPathBuilderSpi;
 import java.util.List;
 
 import br.com.gcampioto.AlunoDAO;
+import br.com.gcampioto.adapter.AlunoAdapter;
 import br.com.gcampioto.model.Aluno;
 
 public class ListaAlunosActivity extends AppCompatActivity {
@@ -83,8 +84,8 @@ public class ListaAlunosActivity extends AppCompatActivity {
         AlunoDAO alunoDAO = new AlunoDAO(this);
         try {
             List<Aluno> alunos = alunoDAO.getAllAlunos();
-            ArrayAdapter<Aluno> adapterString = new ArrayAdapter<Aluno>(this, android.R.layout.simple_list_item_1, alunos);
-            listViewAlunos.setAdapter(adapterString);
+            AlunoAdapter adapter = new AlunoAdapter(this, alunos);
+            listViewAlunos.setAdapter(adapter);
         } catch (Exception e) {
             Toast.makeText(ListaAlunosActivity.this, "Erro ao recuperar os alunos", Toast.LENGTH_SHORT).show();
             Log.e("ERRO: ", Log.getStackTraceString(e));
