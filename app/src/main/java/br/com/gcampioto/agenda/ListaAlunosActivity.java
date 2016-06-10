@@ -28,7 +28,10 @@ import java.security.cert.CertPathBuilderSpi;
 import java.util.List;
 
 import br.com.gcampioto.AlunoDAO;
+import br.com.gcampioto.SendNotasAsync;
+import br.com.gcampioto.WebClient;
 import br.com.gcampioto.adapter.AlunoAdapter;
+import br.com.gcampioto.converter.AlunoConverter;
 import br.com.gcampioto.model.Aluno;
 
 public class ListaAlunosActivity extends AppCompatActivity {
@@ -64,6 +67,10 @@ public class ListaAlunosActivity extends AppCompatActivity {
             }
         });
         registerForContextMenu(listViewAlunos);
+        if(ActivityCompat.checkSelfPermission(ListaAlunosActivity.this, Manifest.permission.RECEIVE_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(ListaAlunosActivity.this, new String[]{Manifest.permission.RECEIVE_SMS}, 1);
+        }
     }
 
     @Override
@@ -78,6 +85,17 @@ public class ListaAlunosActivity extends AppCompatActivity {
         menuInflater.inflate(R.menu.menu_lista_alunos, menu);
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_enviar_notas:
+                new SendNotasAsync(this).execute();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void populateListAlunos() {
